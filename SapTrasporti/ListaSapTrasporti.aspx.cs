@@ -44,7 +44,7 @@ namespace WebAppAMIU.SapTrasporti
             var userName = User.Identity.Name;
             var currYear = System.DateTime.Now.Year;
             var dt = System.DateTime.Now.AddDays(-60);
-            data_richiesta_a.Value = currYear.ToString() + "-12-31";
+            data_richiesta_a.Value = currYear.ToString() + "-12-31"; // arrivo fino a fine anno corrente
             data_richiesta_da.Value = dt.ToString("yyyy-MM-dd");
 
             FillTable();

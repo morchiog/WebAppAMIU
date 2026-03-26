@@ -1,0 +1,37 @@
+﻿  .custom-combobox {
+    position: relative;
+    display: inline-block;
+  }
+  .custom-combobox-toggle {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    /* support: IE7 */
+    height: 1.3em;
+    top: 0.2em;
+  }
+  .custom-combobox-input {
+    padding-left: 0.3em;
+  }
+  
+  .ui-autocomplete {
+    max-height: 250px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 250px;
+  }
+  
+  .ui-autocomplete-loading 
+  {
+    background-image: url('Images/loadingMetro.gif') !important;
+  	background-position: center !important;
+  	background-repeat: no-repeat !important;
+  }

@@ -1,0 +1,167 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebAppAMIU.SiteMaster" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>AMIU - Utilità</title>
+    <link rel="shortcut icon" type="image/x-icon" href="<%= ResolveUrl("~/LayoutImages/favicon.png") %>" />
+
+    <!-- Bootstrap -->
+    <link href="<%= ResolveUrl("~/Styles/bootstrap.min.css") %>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/fontawesome.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/solid.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/Grid.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/style2.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/style.css")%>" rel="stylesheet" />
+    <!-- Fogli di stile personalizzati -->
+    <link href="<%= ResolveUrl("~/Styles/ModelloTabella.css")%>" rel="stylesheet" />
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style type="text/css">
+        /*resize delle colonne*/
+        .resizable-column {
+            position: relative;
+        }
+
+            .resizable-column:after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 5px;
+                height: 100%;
+                cursor: col-resize;
+            }
+
+        .resizing {
+            cursor: col-resize;
+        }
+
+        .navbar {
+            top: 77px !important;
+        }
+
+        .container-fluid {
+            top: 87px;
+        }
+
+        .bg-info {
+            background-color: #006426 !important;
+            background: url(/LayoutImages/bg-navbar-rid.png) repeat-x !important;
+            height: 77px !important;
+        }
+
+        @media (min-width:993px) {
+            .navbar .appTitle {
+                display: none !important;
+            }
+        }
+
+        @media (max-width:992px) {
+            .content {
+                padding-top: 80px !important;
+            }
+
+
+            .navbar {
+                top: 0px !important;
+            }
+
+                .navbar .appTitle {
+                    display: block !important;
+                }
+
+            .pagewide {
+                height: 0px;
+            }
+        }
+
+        .imgHeader {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+
+        /* The Modal (background) */
+        .loading {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            padding-top: 20%; /* Location of the box */
+            padding-left: 40%; /* Location of the box */
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+    </style>
+
+
+</head>
+<body>
+    <div class="pagewide  bg-info d-none d-lg-block fixed-top">
+        <span class="appTitle">
+            <asp:Label ID="lblAppTitle" runat="server"></asp:Label></span>
+        <img src="<%= ResolveUrl("~/LayoutImages/lanterna-rid.png") %>" alt="" class="imgHeader" />
+    </div>
+    <div class="navbar navbar-expand-md navbar-dark bg-success  fixed-top">
+        <a class="navbar-brand" href="<%= ResolveUrl("~") %>" target="_self">
+            <img src="<%= ResolveUrl("~/LayoutImages/amiu_small.png") %>" alt="Logo" style="max-width: 70px;" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="collapsingNavbar">
+            <ul class="navbar-nav">
+            </ul>
+            <asp:Label runat="server" ID="lblSchema" Text="" Style="color: coral; font-size: 24px; font-weight: bold"></asp:Label>
+        </div>
+    </div>
+
+
+
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+        <div class="container-fluid content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
+    </asp:PlaceHolder>
+</body>
+</html>

@@ -1,0 +1,8 @@
+.vs/WebAppAMIU.csproj.dtbcache.json
+/.vs
+/bin
+/obj
+Web.config
+Web.Debug.config
+Web.Release.config
+/packages

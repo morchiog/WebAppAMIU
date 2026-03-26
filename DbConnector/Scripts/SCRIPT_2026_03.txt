@@ -1,0 +1,27 @@
+﻿-- DROP TABLE "listeTARI".trasporti_sap;
+
+CREATE TABLE "AMIUWebUtilities".trasporti_sap (
+	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
+	data_ins date NOT NULL,
+	utente_ins varchar NOT NULL,
+	num_trasp varchar NOT NULL,
+	ticket varchar NULL,
+	nota varchar NULL,
+	CONSTRAINT pk_trasporti_sap PRIMARY KEY (id)
+);
+
+
+-- DROP TABLE "AMIUWebUtilities".trasporti_sap_file;
+
+CREATE TABLE "AMIUWebUtilities".trasporti_sap_file (
+	id int4 GENERATED ALWAYS AS IDENTITY( INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1 NO CYCLE) NOT NULL,
+	id_trasp int4 NOT NULL,
+	percorso_file varchar NOT NULL,
+	estensione varchar NOT NULL,
+	tipo int4 DEFAULT 0 NOT NULL,
+	nome_file varchar NOT NULL,
+	CONSTRAINT pk_diniego_file PRIMARY KEY (id)
+);
+
+
+ALTER TABLE "AMIUWebUtilities".trasporti_sap_file ADD CONSTRAINT fk_trasporti_file_trasporti FOREIGN KEY (id_trasp) REFERENCES "AMIUWebUtilities".trasporti_sap(id);

@@ -1,0 +1,226 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="PopUp.Master.cs" Inherits="WebAppAMIU.PopUpMaster" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content="" lang="it-IT" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>AMIU - Liste TARI</title>
+    <link rel="shortcut icon" type="image/x-icon" href="<%= ResolveUrl("~/LayoutImages/favicon.png") %>" />
+    <!-- Bootstrap -->
+    <link href="<%= ResolveUrl("~/Styles/bootstrap.min.css") %>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/fontawesome.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/solid.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/Grid.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/style2.css")%>" rel="stylesheet" />
+    <link href="<%= ResolveUrl("~/Styles/style.css")%>" rel="stylesheet" />
+    <!-- Fogli di stile personalizzati -->
+    <link href="<%= ResolveUrl("~/Styles/ModelloTabella.css")%>" rel="stylesheet" />
+   
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="<%= ResolveUrl("~/Scripts/jquery-1.9.1.min.js") %>"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script type="text/javascript" src="<%= ResolveUrl("~/Scripts/bootstrap.min.js") %>"></script>
+
+    <%-- date  --%>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.it.min.js" type="text/javascript"></script>
+
+    <%-- added  --%>
+    <script type="text/javascript" src="<%= ResolveUrl("~/Scripts/ajax.js") %>"></script>
+    <script type="text/javascript" src="<%= ResolveUrl("~/Scripts/asyncPostBackManager.js") %>"></script>
+    <%-- charts --%>
+    <script src="<%= ResolveUrl("~/Scripts/charts/Chart.bundle.js") %>" type="text/javascript"></script>
+    <script src="<%= ResolveUrl("~/Scripts/charts/Chart.bundle.min.js") %>" type="text/javascript"></script>
+    <script src="<%= ResolveUrl("~/Scripts/charts/Chart.js") %>" type="text/javascript"></script>
+    <script src="<%= ResolveUrl("~/Scripts/charts/Chart.min.js") %>" type="text/javascript"></script>
+
+     <!-- MultiSelect CSS & JS library -->
+    <link href="<%= ResolveUrl("~/Styles/multiselect/jquery.multiselect.css") %>" rel="stylesheet" />
+    <script src="<%= ResolveUrl("~/Scripts/multiselect/jquery.multiselect.js") %>"></script>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("input[type=submit]").button();
+            $("input[type=button]").button();
+
+            $('.btn-outline-success').on('click', function () {                
+                $('.loading').show();
+            });
+        });
+
+
+        function makeColumnsResizable(table) {
+            const cols = table.querySelectorAll("th");
+
+            cols.forEach((col, index) => {
+                // Aggiungi la classe per rendere la colonna ridimensionabile
+                col.classList.add('resizable-column');
+
+                let startX, startWidth;
+
+                col.addEventListener('mousedown', function (e) {
+                    startX = e.pageX;
+                    startWidth = col.offsetWidth;
+                    document.documentElement.addEventListener('mousemove', doDrag);
+                    document.documentElement.addEventListener('mouseup', stopDrag);
+                    document.body.classList.add('resizing');
+                });
+
+                function doDrag(e) {
+                    col.style.width = startWidth + e.pageX - startX + 'px';
+                }
+
+                function stopDrag(e) {
+                    document.documentElement.removeEventListener('mousemove', doDrag);
+                    document.documentElement.removeEventListener('mouseup', stopDrag);
+                    document.body.classList.remove('resizing');
+                }
+            });
+        }
+
+
+        function RedirectOpener(url) {
+            if (!opener) {
+                window.location.href = url;
+            }
+            else {
+                opener.location.href = url;
+                window.close();
+                UnblockUI();
+            }
+        }
+
+        function RefreshOpenerAndClose() {
+            var btnId = '<%=(Request.QueryString["refreshBtn"] ?? String.Empty) %>';
+            if (btnId != "") {
+                var btn = window.opener.jQuery("#" + btnId);
+                if (btn) {
+                    btn.click();
+                }
+            }
+            window.close();
+        }
+
+        //Se è stato passato a questa pagina un bottone incaricato di aggiornare la pagina precedente, lo clicco
+        function RefreshOpener() {
+            var btnId = '<%=(Request.QueryString["refreshBtn"] ?? String.Empty) %>';
+            if (btnId != "") {
+                var btn = window.opener.jQuery("#" + btnId);
+                if (btn) {
+                    btn.click();
+                }
+            }
+        }
+
+        function CloseCurrentWindow() {
+            window.close();
+        }
+
+        function CloseCurrentWindow4(indirizzo) {
+            RedirectOpener(indirizzo);
+        }
+
+        function CloseCurrentWindow1() {
+            if (confirm('Ti sei ricordato di salvare eventuali cambiamenti?'))
+                CloseCurrentWindow();
+        }
+
+        
+        document.addEventListener("DOMContentLoaded", function () {
+            const gridViewTable = document.querySelector(".my-gridview-class");
+            if (gridViewTable) {
+                makeColumnsResizable(gridViewTable);
+            }
+        });
+
+        function AlertError(str2Show) {
+            alert(str2Show);
+        }
+
+    </script>
+    <style type="text/css">        
+        .navbar {
+            top: 77px !important;
+        }
+
+        .container-fluid {
+            top: 77px;
+        }
+
+        .bg-info {
+            background-color: #00c65b !important;
+            background: url(/LayoutImages/bg-navbar-rid.png) repeat-x !important;
+            height: 77px !important;
+        }
+
+        @media (min-width:993px) {
+            .navbar .appTitle {
+                display: none !important;
+            }
+        }
+
+        @media (max-width:992px) {
+            .content {
+                padding-top: 80px !important;
+            }
+
+
+            .navbar {
+                top: 0px !important;
+            }
+
+                .navbar .appTitle {
+                    display: block !important;
+                }
+
+            .pagewide {
+                height: 0px;
+            }
+        }
+
+        .imgHeader {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+
+        /* The Modal (background) */
+        .loading {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            padding-top: 20%; /* Location of the box */
+            padding-left: 40%; /* Location of the box */
+            top:0;
+	        bottom: 0;
+	        left: 0;
+	        right: 0;  	
+	        margin: 0 auto;
+            width: 100%; 
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar-expand-md navbar-dark bg-success  fixed-top">&nbsp;</div>
+    <form id="form1" runat="server">
+        <div class="container-fluid content">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">                
+            </asp:ContentPlaceHolder>
+        </div>
+        <!-- Modal Progress DIV -->
+        <div id="modalProgressDIV" runat="server" class="loading">
+          <img src="/Images/loading.gif" title="Sto caricando i dati..." alt="Sto caricando i dati...">          
+            <!--<p style="color:darkgreen;font-weight:bold">Sto caricando i dati...</p>-->
+        </div>
+    </form>
+</body>
+</html>

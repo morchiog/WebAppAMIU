@@ -100,13 +100,15 @@ namespace WebAppAMIU.SapTrasporti
 
         public NpgsqlParameter[] GetParameters()
         {
+    
+            var pnota = new NpgsqlParameter("pnota", NpgsqlDbType.Varchar) { Value = txtNote.Text };
+            var pnum_trasp = new NpgsqlParameter("pnum_trasp", NpgsqlDbType.Varchar) { Value = txtNumTrasp.Text };
+            var pticket = new NpgsqlParameter("pticket", NpgsqlDbType.Varchar) { Value = txtTicket.Text };
+
             var putente_ins = new NpgsqlParameter("putente_ins", NpgsqlDbType.Varchar) { Value = Common.GetUsername(this.Page) };
             var pdata_ins = new NpgsqlParameter("pdata_ins", NpgsqlDbType.Date) { Value = System.DateTime.Now };
             var pid = new NpgsqlParameter("pid", NpgsqlDbType.Integer) { Value = int.Parse(hdId.Value) };
 
-            var pnota = new NpgsqlParameter("pnota", NpgsqlDbType.Varchar) { Value = txtNote.Text };
-            var pnum_trasp = new NpgsqlParameter("pnum_trasp", NpgsqlDbType.Varchar) { Value = txtNumTrasp.Text };
-            var pticket = new NpgsqlParameter("pticket", NpgsqlDbType.Varchar) { Value = txtTicket.Text };
 
             NpgsqlParameter[] parameters = { pid, putente_ins, pdata_ins, pnota, pnum_trasp, pticket };
 

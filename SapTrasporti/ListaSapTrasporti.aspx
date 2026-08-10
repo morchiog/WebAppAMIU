@@ -240,7 +240,7 @@
                         <td>Note:
                         </td>
                         <td>
-                            <asp:TextBox runat="server" ID="txtNote" TextMode="MultiLine" Rows="3" Columns="45" Style="resize: none"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtNote" TextMode="MultiLine" Rows="3" Columns="45" style="resize: both"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>

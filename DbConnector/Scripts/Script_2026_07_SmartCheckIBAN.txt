@@ -1,0 +1,7 @@
+CREATE VIEW QLIK.V_Fornitori_CheckIban AS
+SELECT   f.stcd1 AS CFISC,  f.stcd2 AS PIVA,   f.LIFNR AS Codice_Fornitore,    f.NAME1 AS Nome_Fornitore,    b.BANKS AS NAZ_BANCA,    b.BANKL AS ABI_CAB,
+    b.BANKN AS CONTO_CORRENTE,    b.BKONT AS CHIAVE_CONTROLLO,    b.BVTYP AS TIPO_BANCA_PARTNER,    m.BANKA AS NOME_BANCA,    i.IBAN  AS IBAN
+FROM     SAPHANADB.LFA1 f -- 1. Collegamento ai dati bancari del fornitore
+INNER JOIN     SAPHANADB.LFBK b ON f.LIFNR = b.LIFNR -- 2. Collegamento all'anagrafica delle banche per avere il nome della banca
+LEFT JOIN      SAPHANADB.BNKA m ON b.BANKS = m.BANKS AND b.BANKL = m.BANKL -- 3. Collegamento per estrarre l'IBAN associato al conto
+LEFT JOIN      SAPHANADB.TIBAN i ON b.BANKS = i.BANKS AND b.BANKL = i.BANKL AND b.BANKN = i.BANKN;

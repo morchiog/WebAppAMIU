@@ -16,6 +16,7 @@ using System.Web;
 using System.Web.Services.Description;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 using WebAppAMIU.DbConnector;
 using WebAppAMIU.Models.SmartCheckIBAN;
 
@@ -34,22 +35,50 @@ namespace WebAppAMIU.SmartCheckIBAN
         {
             if (!IsPostBack)
             {
-                //   InizializzaFiltri();
+                InizializzaFiltri();
             }
         }
 
         protected void InizializzaFiltri()
         {
-
+            FillTable();
         }
 
+        protected void InsertEsitoCheck(SmartCheckResponse scr)
+        {
+            var pcodice_fornitore = new NpgsqlParameter("pcodice_fornitore", NpgsqlDbType.Varchar) { Value = txtCodForn.Text };
+            var pesito_check = new NpgsqlParameter("pesito_check", NpgsqlDbType.Varchar);
+            var pnote = new NpgsqlParameter("pnote", NpgsqlDbType.Varchar);
 
+            if (scr.success)
+            {
+                pesito_check.Value = "OK";
+                pnote.Value = DBNull.Value;
+            }
+            // se è success ,, ma qualcosa non va...
+            if (scr.payload.isAllowed)
+            {
+                pesito_check.Value = "OK";
+                pnote.Value = DBNull.Value;
+            }
+            else if (!scr.payload.isAllowed)
+            {
+                pesito_check.Value = "KO";
+                pnote.Value = scr.payload.additionalInfo;
+            }
+            else if (scr.errors != null)
+            {
+                pesito_check.Value = "KO";
+                pnote.Value = scr.errors[0].description;
+            }
+            else 
+            {
+                pesito_check.Value = "KO";
+                pnote.Value = "Errore...";
+            }
 
-
-
-
-
-
+                PostgreSQLConnector.ExecuteNonQuery("PagoPa", DBAccess.DbSmartCheck.InsertFornitoreSmartCheckLog, pcodice_fornitore, pesito_check, pnote);
+        }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
@@ -88,58 +117,90 @@ namespace WebAppAMIU.SmartCheckIBAN
             txtAuxRes.Text += response1.Content;
             var resSCI = System.Text.Json.JsonSerializer.Deserialize<Models.SmartCheckIBAN.SmartCheckResponse>(response1.Content);
 
-            txtAuxRes.Text +=  " Risultato:" + resSCI.success.ToString();
+            txtAuxRes.Text += " Risultato:" + resSCI.success.ToString();
 
+            InsertEsitoCheck(resSCI);
+
+            FillTable();
         }
 
-        protected void grdfornitore_ItemCommand(object source, DataGridCommandEventArgs e)
+
+
+
+
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
-            if (e.CommandName=="sel")
-            {
-                lblCfisc.Text = e.Item.Cells[2].Text;
-                lblPIVA.Text = e.Item.Cells[3].Text;
-                lblIban.Text = e.Item.Cells[5].Text;
-            }
+            FillTable();
         }
 
-        protected void btnTrigForn_Click(object sender, EventArgs e)
+        protected void FillTable()
         {
-            string strSrc;
-            try
-            {
+            var dataTable = RetrieveRows();
 
-                grdfornitore.DataSource = null;
-                grdfornitore.DataBind();
-                var strSql = new StringBuilder();
-
-                if (txt_fornitore.Text.Trim().ToUpper().Length<= 2) 
-                {
-                    lblError.Visible = true;
-                    lblError.Text = "Inserire più di 2 caratteri...";
-                    return;
-                }
-                lblError.Visible = false;
-
-
-                strSql.Append(" SELECT  CFISC, piva, CODICE_FORNITORE , NOME_FORNITORE , NOME_BANCA , iban  FROM \"SapUtility\".fornitori_sap ");
-                strSql.Append(" WHERE upper(cfisc || piva || nome_fornitore) LIKE '%{0}%' ");
-
-                //strSrc = txt_oggetto.Value.Replace(" ", "%");
-                strSrc = txt_fornitore.Text.Trim().ToUpper().Replace(" ", "%");
-
-                var dt = PostgreSQLConnector.ExecuteReader("PagoPa",  strSql.ToString().Replace("{0}", strSrc));
-                if (dt != null && dt.Rows != null && dt.Rows.Count > 0)
-                {
-                    grdfornitore.DataSource = new DataView(dt);
-                    grdfornitore.DataBind();
-                }
+            if (dataTable.Rows.Count < 1)//se la tabella è vuota viene mostrato un messaggio di informazione
+            {            
+                no_data_lbl.Attributes.CssStyle.Add("display", "block");
             }
-            catch (Exception)
+            else
             {
-                throw;
+                no_data_lbl.Attributes.CssStyle.Add("display", "none");
             }
+
+            data_gridview.DataSource = dataTable; //matching della gridview con la datatable
+            data_gridview.DataBind();
         }
 
-      
+        protected DataTable RetrieveRows()
+        {
+            string whereCond = "";
+            string query = DBAccess.DbSmartCheck.SelectFornitoriSAP;
+            System.Data.DataTable dataTable = new System.Data.DataTable();
+
+            var stElaSelected = false;
+            var condStEla = " and (1=0 ";
+            foreach (System.Web.UI.WebControls.ListItem li in chkStatoVerif.Items)
+            {
+                if (li.Selected)
+                {
+                    stElaSelected = true;
+                    condStEla += " or coalesce(c.esito_check,'--') = '" + li.Value + "'";
+                }
+            }
+            condStEla += " )";
+
+            if (stElaSelected)
+            {
+                whereCond += condStEla;
+            }
+
+            if (txtRicerca.Value != "") { whereCond += " and upper(coalesce(CFISC,'_') || '_' || coalesce(piva,'_') || '_' || coalesce(iban,'_')|| '_' || coalesce(a.CODICE_FORNITORE,'_') || '_' || coalesce(NOME_FORNITORE,'_') || '_' || coalesce(NOME_BANCA,'_') || coalesce(note,'_')) like upper('%" + txtRicerca.Value + "%')"; }
+ 
+            query = query.Replace("{where_condition}", whereCond);
+
+            dataTable = PostgreSQLConnector.ExecuteReader("PagoPa", query);
+
+            return dataTable;
+        }
+
+
+        protected void btnReset_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ManSmartCheckIBAN");
+        }
+
+        protected void btnExportExcel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void data_gridview_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+
+        }
+
+        protected void data_gridview_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
     }
 }

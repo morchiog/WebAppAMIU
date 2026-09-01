@@ -306,6 +306,7 @@
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
     <Compile Include="DBAccess\DbOraEcos.cs" />
+    <Compile Include="DBAccess\DbSmartCheck.cs" />
     <Compile Include="DBAccess\DbWebUtilities.cs" />
     <Compile Include="DbConnector\MOracleHelp.cs" />
     <Compile Include="DbConnector\PostgreSQLConnector.cs" />

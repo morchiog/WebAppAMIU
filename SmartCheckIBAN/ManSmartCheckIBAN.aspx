@@ -1,4 +1,4 @@
-﻿<%@ Page EnableEventValidation="true" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="ManSmartCheckIBAN.aspx.cs" Inherits="WebAppAMIU.SmartCheckIBAN.ManSmartCheckIBAN" %>
+﻿<%@ Page EnableEventValidation="true" Language="C#" AutoEventWireup="true" MasterPageFile="~/Site.Master" CodeBehind="ManSmartCheckIBAN.aspx.cs" Inherits="WebAppAMIU.SmartCheckIBAN.ManSmartCheckIBAN" ValidateRequest="false" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
@@ -96,10 +96,10 @@
             Codice Fiscale:<asp:TextBox runat="server" ID="lblCfisc"></asp:TextBox>
             <br />Partita IVA:<asp:TextBox runat="server" ID="lblPIVA"></asp:TextBox>
             <br />IBAN:<asp:TextBox runat="server" ID="lblIban"></asp:TextBox>
-            <asp:TextBox runat="server" style="display:none" ID="txtAuxRes"></asp:TextBox>
+          
         </div>
     </div>
-
+      <asp:TextBox runat="server" style="display:none" ID="txtAuxRes"></asp:TextBox>
     <h1>
         <label runat="server" id="no_data_lbl" style="display: none; margin-top: 1%;">Non sono presenti dati da mostrare</label></h1>
     <asp:GridView runat="server" CssClass="mt-3 my-gridview-class" ID="data_gridview" AutoGenerateColumns="false" HeaderStyle-ForeColor="White" HeaderStyle-BackColor="#086424" HeaderStyle-HorizontalAlign="Center"

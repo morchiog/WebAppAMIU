@@ -13,6 +13,9 @@ namespace WebAppAMIU
     {
         void Application_Start(object sender, EventArgs e)
         {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+            System.Net.ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, sslPolicyErrors) => true;
+
             // Codice eseguito all'avvio dell'applicazione
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

@@ -407,6 +407,7 @@
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
     <Content Include="SmartCheckIBAN\CERT_64936.p12" />
+    <Content Include="SmartCheckIBAN\ExportSCI.xlsx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

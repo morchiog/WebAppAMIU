@@ -78,6 +78,15 @@ namespace WebAppAMIU.SmartCheckIBAN
         protected global::System.Web.UI.WebControls.Button btnExportExcel;
 
         /// <summary>
+        /// Controllo lblRigheSel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRigheSel;
+
+        /// <summary>
         /// Controllo btnLogin.
         /// </summary>
         /// <remarks>

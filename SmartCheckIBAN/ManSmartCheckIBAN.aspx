@@ -85,22 +85,27 @@
              <asp:Button runat="server" ID="btnSearch" CssClass="button btn" Text="Filtra" OnClick="btnSearch_Click" />
         <asp:Button runat="server" ID="btnReset" CssClass="button btn" Text="Reset Filtri" OnClick="btnReset_Click" />
         <asp:Button runat="server" ID="btnExportExcel" CssClass="button btn" Text="Excel" OnClick="btnExportExcel_Click" />
-
+        tot righe <asp:Label runat="server" ID="lblRigheSel"></asp:Label>
     </div>
 
 
-    <div id="divVerif" class="form-horizontal" style="display:none">
-        <asp:Button runat="server" ID="btnLogin" Text="Verifica" CssClass="bottone btn" OnClick="btnLogin_Click" />
-        <div>
-            <asp:TextBox runat="server" style="display:none" ID="txtCodForn"></asp:TextBox>
-            Codice Fiscale:<asp:TextBox runat="server" ID="lblCfisc"></asp:TextBox>
-            <br />Partita IVA:<asp:TextBox runat="server" ID="lblPIVA"></asp:TextBox>
-            <br />IBAN:<asp:TextBox runat="server" ID="lblIban"></asp:TextBox>
-          
-        </div>
+    <div id="divVerif" style="width: 1300px">
+        <table style="border: 5px solid trasparent">
+            <tr>
+                <td>
+                    <asp:Button runat="server" ID="btnLogin" Text="Verifica" CssClass="bottone btn" OnClick="btnLogin_Click" /></td>
+                <td class="col-lg-3">
+                    <asp:TextBox runat="server" Style="display: none" ID="txtCodForn"></asp:TextBox>
+                    Codice Fiscale:<asp:TextBox runat="server" ID="lblCfisc"></asp:TextBox></td>
+                <td class="col-lg-3">Partita IVA:<asp:TextBox runat="server" ID="lblPIVA"></asp:TextBox></td>
+                <td class="col-lg-3">IBAN:<asp:TextBox runat="server" ID="lblIban"></asp:TextBox>
+                </td>
+            </tr>
+        </table>
     </div>
-      <asp:TextBox runat="server" style="display:none" ID="txtAuxRes"></asp:TextBox>
+    <asp:TextBox runat="server" Style="display: none" ID="txtAuxRes"></asp:TextBox>
     <h1>
+        <!-- nel btnVerifica la to client OnClientClick="ApriVerifica(this);return false;"-->
         <label runat="server" id="no_data_lbl" style="display: none; margin-top: 1%;">Non sono presenti dati da mostrare</label></h1>
     <asp:GridView runat="server" CssClass="mt-3 my-gridview-class" ID="data_gridview" AutoGenerateColumns="false" HeaderStyle-ForeColor="White" HeaderStyle-BackColor="#086424" HeaderStyle-HorizontalAlign="Center"
         OnRowDataBound="data_gridview_RowDataBound" OnRowCommand="data_gridview_RowCommand" HeaderStyle-VerticalAlign="Middle" ForeColor="Black" RowStyle-HorizontalAlign="Center"
@@ -108,7 +113,7 @@
         <Columns>
             <asp:TemplateField>
                 <ItemTemplate>
-                    <asp:LinkButton runat="server" ID="bntVerifica" Text="Verifica" CssClass="bottone btn" OnClientClick="ApriVerifica(this);return false;"></asp:LinkButton>
+                    <asp:LinkButton runat="server" ID="bntVerifica" Text="Verifica" CssClass="bottone btn" CommandName="verifica" CommandArgument='<%# Eval("CODICE_FORNITORE") + ";" +Eval("TIPO_BANCA_PARTNER") + ";" + Eval("CFISC") + ";" +Eval("PIVA") + ";" +Eval("IBAN") %>'></asp:LinkButton>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:BoundField DataField="CODICE_FORNITORE" HeaderText="Codice Fornitore" ReadOnly="true" />
@@ -117,18 +122,21 @@
             <asp:BoundField DataField="PIVA" HeaderText="Partita IVA" ReadOnly="true" />
             <asp:BoundField DataField="NOME_BANCA" HeaderText="Banca" ReadOnly="true" ItemStyle-HorizontalAlign="Left" />
             <asp:BoundField DataField="IBAN" HeaderText="Iban Fornitore" ReadOnly="true" ItemStyle-HorizontalAlign="Left" />
-            <asp:BoundField DataField="data_check" HeaderText="Data Ultimo Controllo " ReadOnly="true" DataFormatString="{0:d}" />
-            <asp:BoundField DataField="esito_check" HeaderText="Esito Controllo" ReadOnly="true" />
-            <asp:BoundField DataField="note" HeaderText="Note" ReadOnly="true" />
-            
+            <asp:BoundField DataField="last1_data_check" HeaderText="Data Ultimo Controllo " ReadOnly="true" DataFormatString="{0:d}" />
+            <asp:BoundField DataField="last1_esito_check" HeaderText="Esito Controllo" ReadOnly="true" />
+            <asp:BoundField DataField="last1_note" HeaderText="Note" ReadOnly="true" />
+            <asp:BoundField DataField="last2_data_check" HeaderText="Data Penultimo Controllo " ReadOnly="true" DataFormatString="{0:d}" />
+            <asp:BoundField DataField="last2_esito_check" HeaderText="Esito Controllo" ReadOnly="true" />
+            <asp:BoundField DataField="last2_note" HeaderText="Note" ReadOnly="true" />
+            <asp:BoundField DataField="TIPO_BANCA_PARTNER"     />
         </Columns>
     </asp:GridView>
-  
 
+    <!-- ItemStyle-Width="0" HeaderStyle-Width="0" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" -->
 
     <script>
         function ApriVerifica(obj) {
-            divVerif.style.display = 'block'; 
+            divVerif.style.display = 'block';
             selectedRow = obj.parentElement.parentElement;
             cellCodForm = selectedRow.cells[1];
             cellNome = selectedRow.cells[2];

@@ -15,6 +15,24 @@ namespace WebAppAMIU
 
     public class Common
     {
+        public static bool IsSmartCheckAllowed(System.Web.UI.Page page)
+        {
+            var bRet = false;
+            var userName = page.User.Identity.Name;
+            if (!string.IsNullOrEmpty(userName))
+            {
+                userName = userName.Replace("DSI\\", "");
+                var sSCAllowed = ConfigurationManager.AppSettings["SmartCheckAccountAllowed"];
+                if (!string.IsNullOrEmpty(sSCAllowed))
+                {
+                    var lstAdmRicorsi = sSCAllowed.Split(',');
+                    bRet = lstAdmRicorsi.Contains(userName.ToUpper());
+                }
+            }
+            return bRet;
+        }
+
+
         public static string ReplaceForJs(string v)
         {
             if (string.IsNullOrWhiteSpace(v?.Trim())) { return ""; }
